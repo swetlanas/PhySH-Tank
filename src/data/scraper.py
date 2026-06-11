@@ -3,10 +3,17 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import pandas as pd
-import regex as re
+import re
 import json
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
 
+
+
+BASE_URL = "https://journals.aps.org"
+START_VOLUME = 93
+OUTPUT_PATH = "data/raw/prb_tags.csv"
 
 
 def generate_all_article_url(total_issues = 24,total_volumes = 18):
@@ -26,22 +33,23 @@ def generate_all_article_url(total_issues = 24,total_volumes = 18):
     """
 
     #Create a list of urls for each issue in a given volume of APS Physical Review B starting in January 2016 (VOLUME 93) when they started using PhySH tags
-    journal_issue_urls=["https://journals.aps.org/prb/issues/"+str(volume_idx+93)+"/"+str(issue_idx+1) for volume_idx in range(total_volumes) for issue_idx in range(total_issues)]
+    journal_issue_urls=[BASE_URL+"/prb/issues/"+str(volume_idx+START_VOLUME)+"/"+str(issue_idx+1) for volume_idx in range(total_volumes) for issue_idx in range(total_issues)]
 
     
 
     journal_dictionary = {}
-
+    
+    driver = webdriver.Chrome()
     for idx in range(len(journal_issue_urls)):
-        driver = webdriver.Chrome()
         driver.get(journal_issue_urls[idx]) #idx loops over each issue
         html_source=driver.page_source
 
         soup = BeautifulSoup(html_source, "html.parser")
         journal_dictionary[f'raw_article_tags{idx}']=soup.find_all('a',class_="default-link-no-flex heading-base-bold") 
         #Get all article URLs for a given journal
-        journal_dictionary[f'article_urls{idx}']=[str("https://journals.aps.org")+tags.get('href') for tags in list(journal_dictionary[f'raw_article_tags{idx}'])]
+        journal_dictionary[f'article_urls{idx}']=[BASE_URL+tags.get('href') for tags in list(journal_dictionary[f'raw_article_tags{idx}'])]
 
+    driver.quit()
     journal_article_urls_all = np.concatenate([journal_dictionary[f'article_urls{idx}'] for idx in range(total_issues*total_volumes)])
     
     return journal_article_urls_all
@@ -80,16 +88,28 @@ def scrape_title_abstract_tags(urls):
                 abstract_text.decompose()
 
         except:
-            print(f"No phySH tags for '{url}'.") 
+            logger.warning(f"No PhySH tags found for {url}")
 
-    print(f"The length of abstract list is {len(abstracts_list)}")
-    print(f"The length of phys_labels list is {len(phys_labels_list)}")
+
+    logger.info(f"Scraped {len(abstracts_list)} abstracts successfully")
+    logger.info(f"The length of phys_labels list is {len(phys_labels_list)}")
+
     
+    driver.quit() 
+
     return abstracts_list, phys_labels_list
 
-def save_to_file(abstracts_list, phys_labels_list):
+def save_to_file(abstracts_list, phys_labels_list,output_path=OUTPUT_PATH):
     """
-    Removing article with no PhySH tags
+    Save scraped abstracts and PhySH tags to CSV, filtering out articles with no tags.
+
+    Args:
+        abstracts_list: List of abstract strings
+        phys_labels_list: List of PhySH tag lists
+        output_path: Path to save the CSV file
+
+    Returns:
+        None — saves file to disk
     """
     try:
         data = {'Abstracts': abstracts_list, 'PhysHeadings': phys_labels_list}
@@ -100,7 +120,7 @@ def save_to_file(abstracts_list, phys_labels_list):
         df.reset_index(drop=True, inplace=True)
 
         #Save to file
-        df.to_csv('./data/prb_tags.csv')
+        df.to_csv(output_path)
 
     except:
         print('No articles were scraped. Dataframe is empty.')
@@ -112,4 +132,4 @@ if __name__ == "__main__":
     urls_all = generate_all_article_url(total_issues =1,total_volumes=2)
     abstracts_list, phys_labels_list = scrape_title_abstract_tags(urls_all)
     save_to_file(abstracts_list, phys_labels_list)
-    pass
+
