@@ -56,9 +56,9 @@ def generate_all_article_url(total_issues = 24,total_volumes = 18):
 
 
 
-def scrape_title_abstract_tags(urls):
+def scrape_abstract_tags(urls):
     """
-    Scrape title, abstract and PhySH tags for a given article
+    Scrape abstract and PhySH tags for a given article
 
     Args:
         urls : List of URLs to be scraped
@@ -130,6 +130,6 @@ def save_to_file(abstracts_list, phys_labels_list,output_path=OUTPUT_PATH):
 
 if __name__ == "__main__":
     urls_all = generate_all_article_url(total_issues =1,total_volumes=2)
-    abstracts_list, phys_labels_list = scrape_title_abstract_tags(urls_all)
+    abstracts_list, phys_labels_list = scrape_abstract_tags(urls_all)
     save_to_file(abstracts_list, phys_labels_list)
 
