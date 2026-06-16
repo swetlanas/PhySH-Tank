@@ -5,7 +5,7 @@ ML model that recommends PhySH tags ([Physics Subject Headings](https://github.c
 ## Motivation
 When submitting papers to APS journals, authors must manually select 
 relevant tags from 260+ PhySH subject headings which is a time-consuming 
-and ineffecient process. Authors are expected to select 3-8 good tags which might be inconsistent across authors and various submissions. This project automates that recommendation.
+and ineffecient process. Authors are expected to select 3-8 good tags which might be inconsistent across authors and various submissions. This project automates the tag selection process by recommending relevant tags based on the article's abstract.
 
 
 ## Dataset
