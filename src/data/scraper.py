@@ -1,5 +1,9 @@
 #src/data/scraper.py
 
+# NOTE: APS added Cloudflare protection in 2025 which blocks
+# automated scraping. This scraper was used to collect the original
+# dataset. 
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import pandas as pd
