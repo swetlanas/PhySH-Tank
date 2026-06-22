@@ -4,12 +4,32 @@ import pandas as pd
 import requests
 
 def extract_doi(url):
+    """
+    Extracts the DOI from the article URL
+
+    Args:
+        url (string) : URL
+    
+    Returns:
+        DOI as a string
+    """
     m = re.search(r"10\.1103/[^\s]+", url)
     return m.group(0) if m else None
 
 
 def scrape_title(url):
     
+    """
+    Uses SemanticScholar API to request for title and abstract
+
+    Args:
+        url (string) : URL
+    
+    Returns:
+        dictionary of title and abstract
+
+    """
+
     params = {"fields": "title,abstract"}
 
     r = requests.get(url, params=params)
