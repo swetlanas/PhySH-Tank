@@ -2,6 +2,15 @@ import json
 import re
 import pandas as pd
 import requests
+from pathlib import Path
+
+
+ROOT = Path.cwd()
+while not (ROOT / ".git").exists():
+    ROOT = ROOT.parent
+
+DATA_PATH = ROOT / "data" / "all_article_urls.json"
+
 
 def extract_doi(url):
     """
@@ -45,7 +54,7 @@ def scrape_title(url):
 
 if __name__ == "__main__":
     # Read json containing all article URLs into a dataframe.
-    df = pd.read_json('/home/rustycutlery/cppexampl/pys/PhySH-Tank/data/all_article_urls.json')
+    df = pd.read_json(DATA_PATH)
     pd.set_option('display.max_colwidth', None)
     df.rename(columns={0 : 'URL'},inplace=True)
 
@@ -55,7 +64,7 @@ if __name__ == "__main__":
 
     data = [scrape_title(url) for url in doi_url_list[0:15]]
 
-    with open("/home/rustycutlery/cppexampl/pys/PhySH-Tank/data/article_titles_abstracts.json", "w") as f:
+    with open(DATA_PATH.parent / "article_titles_abstracts.json", "w") as f:
         json.dump(data, f, indent=2)
 
 

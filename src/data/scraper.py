@@ -9,15 +9,22 @@ from selenium import webdriver
 import pandas as pd
 import re
 import json
+from pathlib import Path
 import numpy as np
 import logging
 logger = logging.getLogger(__name__)
+
+ROOT = Path.cwd()
+while not (ROOT / ".git").exists():
+    ROOT = ROOT.parent
+
+DATA_PATH = ROOT / "data" / "raw" 
 
 
 
 BASE_URL = "https://journals.aps.org"
 START_VOLUME = 93
-OUTPUT_PATH = "data/raw/prb_tags.csv"
+OUTPUT_PATH = DATA_PATH / "prb_tags.csv"
 
 
 def generate_all_article_url(total_issues = 24,total_volumes = 18):
