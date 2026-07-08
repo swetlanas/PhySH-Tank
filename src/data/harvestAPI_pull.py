@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 #Define the date range for which API pulls article information
-START_DATE = "2026-01-01"
+START_DATE = "2016-01-01"
 END_DATE = "2026-06-30"
 
 
@@ -23,7 +23,7 @@ ROOT = Path.cwd()
 while not (ROOT / ".git").exists():
     ROOT = ROOT.parent
 
-DATA_PATH = ROOT / "data" / "prb_articles_labeled_Jan2026-Jun2026.json"
+DATA_PATH = ROOT / "data" / "prb_articles_labeled_Jan2016-Jun2026.json"
 
 HEADERS = {"Accept": "application/vnd.tesseract.article+json"}
 
