@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 #Define the date range for which API pulls article information
-START_DATE = "2025-07-01"
-END_DATE = "2025-12-31"
+START_DATE = "2016-01-01"
+END_DATE = "2026-06-30"
 
 
 URL="https://harvest.aps.org/v2/journals/articles"
@@ -23,7 +23,7 @@ ROOT = Path.cwd()
 while not (ROOT / ".git").exists():
     ROOT = ROOT.parent
 
-DATA_PATH = ROOT / "data" / "labeled_data.json"
+DATA_PATH = ROOT / "data" / "prb_articles_labeled_Jan2016-Jun2026.json"
 
 HEADERS = {"Accept": "application/vnd.tesseract.article+json"}
 
@@ -51,7 +51,8 @@ def parse_article(data):
         "date"  : article.get("date",None),
         "articleType" : article.get("articleType",None)
         #"journal" : article["journal"].get("id",None)
-        } for article in data["data"]
+        } 
+        for article in data["data"]
         if article.get("articleType",None) in valid_article_types and article["journal"].get("id",None)=="PRB"
     ]
 
