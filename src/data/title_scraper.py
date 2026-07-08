@@ -1,3 +1,5 @@
+#Did not use, using APS harvest API instead.
+
 import json
 import re
 import pandas as pd
