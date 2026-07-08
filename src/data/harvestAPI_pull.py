@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 #Define the date range for which API pulls article information
-START_DATE = "2016-01-01"
+START_DATE = "2026-01-01"
 END_DATE = "2026-06-30"
 
 
@@ -23,7 +23,7 @@ ROOT = Path.cwd()
 while not (ROOT / ".git").exists():
     ROOT = ROOT.parent
 
-DATA_PATH = ROOT / "data" / "prb_articles_labeled_Jan2016-Jun2026.json"
+DATA_PATH = ROOT / "data" / "prb_articles_labeled_Jan2026-Jun2026.json"
 
 HEADERS = {"Accept": "application/vnd.tesseract.article+json"}
 
@@ -44,7 +44,7 @@ def parse_article(data):
     valid_article_types = {"article", "letter", "tutorial", "perspective", "review"}
 
     tags_list = []
-    
+
     for article in data["data"]:
         if article.get("articleType",None) in valid_article_types and article["journal"].get("id",None)=="PRB":
             doi_value = article["identifiers"]["doi"]
@@ -69,6 +69,34 @@ def parse_article(data):
                 )
 
     return tags_list
+
+def fetch_with_retry(url, headers, params=None, max_retries=3):
+    """
+    Fetching a URL with retries when encountering a 500 HTTP error.
+
+    Args:
+        url (str) : given URL to be fetched
+        headers (dict) : request header
+        params (dict) : query parameters
+        max_retires (int) : number of retry attempts
+
+    Returns:
+        response : request response object
+
+    Raises:
+        requests.exceptions.HTTPError: if all retries fail
+    """
+    for attempt in range(max_retries):
+        try:
+            time.sleep(0.5)    
+            response = requests.get(url, headers=headers, params=params)
+            response.raise_for_status()
+            return response
+        except requests.exceptions.HTTPError as e:
+            logger.warning(f"Attempt {attempt+1} failed: {e}")
+            time.sleep(5)
+        
+    raise requests.exceptions.HTTPError(f"All {max_retries} retries failed for {url}")
 
 
 if __name__=="__main__":
@@ -99,7 +127,7 @@ if __name__=="__main__":
 
         try:
             logger.info(f"Starting fetch for {params['from']} to {params['until']}")
-            response = requests.get(URL, headers=HEADERS, params = params)
+            response = fetch_with_retry(URL, headers=HEADERS, params = params)
             data = response.json()
 
             tags_list.extend(parse_article(data))
@@ -117,8 +145,7 @@ if __name__=="__main__":
 
             try:    
                 time.sleep(0.5)    
-                response = requests.get(next_url, headers=HEADERS)
-                response.raise_for_status()
+                response = fetch_with_retry(next_url, headers=HEADERS)
                 data = response.json()
                 tags_list.extend(parse_article(data))
             
