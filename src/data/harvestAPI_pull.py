@@ -43,18 +43,30 @@ def parse_article(data):
     """
     valid_article_types = {"article", "letter", "tutorial", "perspective", "review"}
 
-    tags_list = [
-        {"doi": article["identifiers"]["doi"], 
-        "title" : article['title']['value'], 
-        "abstract" : article.get("abstract",{}).get("value",None), 
-        "physh" : [concept["id"] for concept in article.get("classificationSchemes",{}).get("physh",{}).get("concepts",{})],
-        "date"  : article.get("date",None),
-        "articleType" : article.get("articleType",None)
-        #"journal" : article["journal"].get("id",None)
-        } 
-        for article in data["data"]
-        if article.get("articleType",None) in valid_article_types and article["journal"].get("id",None)=="PRB"
-    ]
+    tags_list = []
+    
+    for article in data["data"]:
+        if article.get("articleType",None) in valid_article_types and article["journal"].get("id",None)=="PRB":
+            doi_value = article["identifiers"]["doi"]
+            abstract_value = article.get("abstract",{}).get("value",None)
+            physh_value = [concept["id"] for concept in article.get("classificationSchemes",{}).get("physh",{}).get("concepts",{})]
+
+            if abstract_value is None:
+                logger.warning(f"Missing abstract : {doi_value}")
+            if not physh_value:
+                logger.warning(f"Missing PhySH tags : {doi_value}")
+            
+
+            tags_list.append(
+                {"doi": doi_value, 
+                "title" : article['title']['value'], 
+                "abstract" : abstract_value, 
+                "physh" : physh_value,
+                "date"  : article.get("date",None),
+                "articleType" : article.get("articleType",None)
+                #"journal" : article["journal"].get("id",None)
+                }
+                )
 
     return tags_list
 
