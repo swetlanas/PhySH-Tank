@@ -1,3 +1,8 @@
+# Ignore the data files in data folder except for sample data for github repo cloning
+data/*
+!data/*_sample.json
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
