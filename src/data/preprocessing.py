@@ -1,8 +1,11 @@
 #src/data/preprocessing.py
 
+#Maps concept IDs to PhySH tag names, cleans up abstract and title to make it ready for model training
+
 
 from pathlib import Path
 import pandas as pd
+import requests
 import re
 import numpy as np
 from rdflib import Graph, Namespace
@@ -13,6 +16,30 @@ while not (ROOT / ".git").exists():
     ROOT = ROOT.parent
 DATA = ROOT / "data" / "prb_headings_full.csv"
 
+URL = "https://raw.githubusercontent.com/physh-org/PhySH/master/physh.rdf.gz"
+
+SKOS = Namespace("http://www.w3.org/2004/02/skos/core#")
+
+def concept_id_to_physh_name():
+    """
+    Loads the concept ID to tag name mapping from PhySH github and returns a dictionary with concept ID keys and PhySH tag name values.
+    """
+
+    response = requests.get(URL, stream=True)
+    with gzip.open(io.BytesIO(response.content), "rt", encoding="utf-8") as f:
+            rdf_text = f.read()
+
+    g = Graph()
+    g.parse(data=rdf_text, format="xml")
+
+
+    uuid_to_label = {}
+    for subject, predicate, obj in g.triples((None, SKOS.prefLabel, None)):
+            if obj.language == "en":
+                uuid = str(subject).split("/")[-1]
+                uuid_to_label[uuid] = str(obj)
+    
+    return uuid_to_label
 
 def clean_abstract(df_raw):
     """
@@ -37,10 +64,10 @@ def clean_abstract(df_raw):
 
     return df_cleaned
 
-def concept_id_to_physh_name():
-
 
 
 if __name__=='__main__':
-    df = pd.read_csv(DATA,sep=',', engine='python')
+    concept_id_map = concept_id_to_physh_name()
+    
+    #df = pd.read_csv(DATA,sep=',', engine='python')
 
