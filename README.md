@@ -1,5 +1,5 @@
 # PhySH-Tank : Physics Subject Headings Tag Recommendation System
-ML model that recommends PhySH tags ([Physics Subject Headings](https://github.com/physh-org/PhySH)) based on journal abstract. Currently optimized for APS Physical Review B articles covering condensed matter and related fields.
+ML model that recommends PhySH tags ([Physics Subject Headings](https://github.com/physh-org/PhySH)) based on journal abstract. Currently optimized for APS Physical Review B articles covering condensed matter and related fields. Learn more about the PhySH classification system and its history [here](https://www.isko.org/cyclo/physh).
 
 
 ## Motivation
