@@ -1,6 +1,7 @@
 # Ignore the data files in data folder except for sample data for github repo cloning
 data/*
 !data/*_sample.json
+literature/*
 
 
 # Byte-compiled / optimized / DLL files
