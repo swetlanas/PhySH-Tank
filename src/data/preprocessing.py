@@ -91,36 +91,36 @@ def concept_hierarchy_graph(graph=None):
             nx_graph.add_edge(parent_id, child_id,rel_type="SKOS concept parent")
         
         # SKOS directional/hierarchical edges: Child -> Parent
-        if predicate == SKOS.narrower:
+        elif predicate == SKOS.narrower:
             nx_graph.add_edge(child_id, parent_id, rel_type="SKOS concept parent")
 
         # PhySH Facet structural edges: Parent (Facet) -> Child (Concept)
-        if predicate == PHYSH.inFacet:
+        elif predicate == PHYSH.inFacet:
             nx_graph.add_edge(parent_id, child_id, rel_type="PHYSH Facet parent")
 
         # PhySH Discipline structural edges: Parent (Discipline) -> Child (Concept)
-        if predicate == PHYSH.inDiscipline:
+        elif predicate == PHYSH.inDiscipline:
             nx_graph.add_edge(parent_id, child_id, rel_type="PHYSH Discipline parent")
 
         # Concept (Parent) -> Container (Child)
-        if predicate == PHYSH.hasConcept:
+        elif predicate == PHYSH.hasConcept:
             nx_graph.add_edge(parent_id,child_id, rel_type="PHYSH Discipline parent")
     
-        if predicate == PHYSH.contains:
+        elif predicate == PHYSH.contains:
             nx_graph.add_edge(parent_id,child_id, rel_type="PHYSH Facet parent")
 
-        # Add node labels 
-        #from SKOS
-        if predicate==SKOS.prefLabel and str(child) in nx_graph:
-            nx_graph.nodes[str(child)]['label'] = str(parent)
-        #from DCTERMS for Disciplines
-        if predicate==DCTERMS.title and str(child) in nx_graph:
-            nx_graph.nodes[str(child)]['label'] = str(parent)
+        # ---Node labels---
+        # Preferred Label from SKOS
+        elif predicate==SKOS.prefLabel and child_id in nx_graph:
+            nx_graph.nodes[child_id]['label'] = parent_id
+        # Title from DCTERMS (Fallback for Disciplines/Facets)
+        elif predicate==DCTERMS.title and child_id in nx_graph:
+            #nx_graph.nodes[str(child)]['label'] = str(parent)
+            nx_graph.nodes[child_id].setdefault('label', parent_id)
         # Add deprecation status
-        if predicate==PHYSH.deprecated and str(child) in nx_graph:
-            nx_graph.nodes[str(child)]['deprecated'] = (str(parent).lower() == 'true')
+        elif predicate==PHYSH.deprecated and child_id in nx_graph:
+            nx_graph.nodes[child_id]['deprecated'] = (parent_id.lower() == 'true')
         
-
     return nx_graph
 
 def clean_abstract(df_raw):
