@@ -9,7 +9,7 @@ import requests
 import re
 import networkx as nx
 import numpy as np
-from rdflib import Graph, Namespace
+from rdflib import Graph, Namespace,SKOS, RDF, URIRef
 import gzip,io
 import logging
 from functools import lru_cache
@@ -19,8 +19,11 @@ while not (ROOT / ".git").exists():
     ROOT = ROOT.parent
 DATA = ROOT / "data" / "prb_headings_full.csv"
 
+
 URL = "https://raw.githubusercontent.com/physh-org/PhySH/master/physh.rdf.gz"
 SKOS = Namespace("http://www.w3.org/2004/02/skos/core#")
+PHYSH = Namespace("https://physh.org/rdf/2018/01/01/core#")
+DCTERMS = Namespace("http://purl.org/dc/terms/")
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",handlers=[
@@ -73,27 +76,67 @@ def concept_id_to_physh_name(graph=load_physh_graph()):
 
 def concept_hierarchy_graph(graph=load_physh_graph()):
     """
-    Loads PhySH rdf from github and returns a NetworkX graph with concept ID hierarchy.
+    Loads PhySH rdf from github and returns a NetworkX graph with concept ID hierarchy using both SKOS and custom PHYSH.
     """
 
     nx_graph = nx.DiGraph()
+    #add_edge() automatically takes care of duplicates if a parent, child pair was already defined
+    #add_edge(u_source, v_target) makes u -> v
 
-    # Build directional edges: Parent -> Child
+    #Initialize tree with all concepts, disciplines and facets as nodes.
+    for subject in graph.subjects():
+        if isinstance(subject,URIRef):
+             nx_graph.add_node(str(subject))
+
+    # SKOS directional/hierarchical edges: Parent -> Child
     for child,predicate, parent in graph.triples((None, SKOS.broader, None)):
         child_id = str(child)
         parent_id = str(parent)
         nx_graph.add_edge(parent_id, child_id)
 
-    # Build directional edges: Child -> Parent
+    # SKOS directional/hierarchical edges: Child -> Parent
     for child,predicate, parent in graph.triples((None, SKOS.narrower, None)):
         child_id = str(child)
         parent_id = str(parent)
-        nx_graph.add_edge(child_id, parent_id) #add_edge() automatically takes care of duplicates if a parent, child pair was already defined
+        nx_graph.add_edge(child_id, parent_id) 
 
-    # Add node labels 
+    # PhySH Facet structural edges: Parent (Facet) -> Child (Concept)
+    for child,predicate, parent in graph.triples((None, PHYSH.inFacet, None)):
+        child_id = str(child)
+        parent_id = str(parent)
+        nx_graph.add_edge(parent_id, child_id)
+
+    # PhySH Discipline structural edges: Parent (Discipline) -> Child (Concept)
+    for child,predicate, parent in graph.triples((None, PHYSH.inDiscipline, None)):
+        child_id = str(child)
+        parent_id = str(parent)
+        nx_graph.add_edge(parent_id, child_id)
+
+    # Container (Parent) -> Concept (Child)
+    for child,predicate, parent in graph.triples((None, PHYSH.hasConcept, None)):
+        child_id = str(child)
+        parent_id = str(parent)
+        nx_graph.add_edge(child_id,parent_id)
+
+    for child,predicate, parent in graph.triples((None, PHYSH.contains, None)):
+        child_id = str(child)
+        parent_id = str(parent)
+        nx_graph.add_edge(child_id,parent_id)
+
+    # Add node labels from SKOS
     for child,predicate, parent in graph.triples((None, SKOS.prefLabel, None)):
         if str(child) in nx_graph:
             nx_graph.nodes[str(child)]['label'] = str(parent)
+
+    # Add node labels from dcterms for Disciplines
+    for child,predicate, parent in graph.triples((None, DCTERMS.title, None)):
+            if str(child) in nx_graph:
+                nx_graph.nodes[str(child)]['label'] = str(parent)
+
+    # Add deprecation status
+    for child,predicate,parent in graph.triples((None, PHYSH.deprecated, None)):
+        if str(child) in nx_graph:
+            nx_graph.nodes[str(child)]['deprecated'] = (str(parent).lower() == 'true')
     
     return nx_graph
 
