@@ -59,21 +59,6 @@ def load_physh_graph():
         raise RuntimeError(f"Failed to load PhySH graph: {e}") from e
         
 
-
-
-def concept_id_to_physh_name(graph=load_physh_graph()):
-    """
-    Loads the concept ID to tag name mapping from PhySH github and returns a dictionary with concept ID keys and PhySH tag name values.
-    """
-
-    uuid_to_label = {}
-    for subject, predicate, obj in graph.triples((None, SKOS.prefLabel, None)):
-            if obj.language == "en":
-                uuid = str(subject).split("/")[-1]
-                uuid_to_label[uuid] = str(obj)
-    
-    return uuid_to_label
-
 def concept_hierarchy_graph(graph=load_physh_graph()):
     """
     Loads PhySH rdf from github and returns a NetworkX graph with concept ID hierarchy using both SKOS and custom PHYSH.
