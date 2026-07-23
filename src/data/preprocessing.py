@@ -1,6 +1,6 @@
 #src/data/preprocessing.py
 
-#Maps concept IDs to PhySH tag names, cleans up abstract and title to make it ready for model training
+#Maps concept IDs to PhySH tag names, loads graph structure of PhySH tags, cleans up abstract and title to make it ready for model training
 
 
 from pathlib import Path
@@ -59,10 +59,15 @@ def load_physh_graph():
         raise RuntimeError(f"Failed to load PhySH graph: {e}") from e
         
 
-def concept_hierarchy_graph(graph=load_physh_graph()):
+def concept_hierarchy_graph(graph=None):
     """
     Loads PhySH rdf from github and returns a NetworkX graph with concept ID hierarchy using both SKOS and custom PHYSH.
+
+
     """
+
+    if graph is None:
+        graph = load_physh_graph()
 
     nx_graph = nx.DiGraph()
     #add_edge() automatically takes care of duplicates if a parent, child pair was already defined
@@ -73,40 +78,40 @@ def concept_hierarchy_graph(graph=load_physh_graph()):
         if isinstance(subject,URIRef):
              nx_graph.add_node(str(subject))
 
-    # SKOS directional/hierarchical edges: Parent -> Child
+        # SKOS directional/hierarchical edges: Parent -> Child
     for child,predicate, parent in graph.triples((None, SKOS.broader, None)):
         child_id = str(child)
         parent_id = str(parent)
-        nx_graph.add_edge(parent_id, child_id)
+        nx_graph.add_edge(parent_id, child_id,rel_type="SKOS concept child")
 
     # SKOS directional/hierarchical edges: Child -> Parent
     for child,predicate, parent in graph.triples((None, SKOS.narrower, None)):
         child_id = str(child)
         parent_id = str(parent)
-        nx_graph.add_edge(child_id, parent_id) 
+        nx_graph.add_edge(child_id, parent_id,rel_type="SKOS concept parent") 
 
     # PhySH Facet structural edges: Parent (Facet) -> Child (Concept)
     for child,predicate, parent in graph.triples((None, PHYSH.inFacet, None)):
         child_id = str(child)
         parent_id = str(parent)
-        nx_graph.add_edge(parent_id, child_id)
+        nx_graph.add_edge(parent_id, child_id, rel_type="PHYSH Facet parent")
 
     # PhySH Discipline structural edges: Parent (Discipline) -> Child (Concept)
     for child,predicate, parent in graph.triples((None, PHYSH.inDiscipline, None)):
         child_id = str(child)
         parent_id = str(parent)
-        nx_graph.add_edge(parent_id, child_id)
+        nx_graph.add_edge(parent_id, child_id, rel_type="PHYSH Discipline parent")
 
-    # Container (Parent) -> Concept (Child)
+    # Concept (Parent) -> Container (Child)
     for child,predicate, parent in graph.triples((None, PHYSH.hasConcept, None)):
         child_id = str(child)
         parent_id = str(parent)
-        nx_graph.add_edge(child_id,parent_id)
+        nx_graph.add_edge(parent_id,child_id, rel_type="PHYSH Discipline parent")
 
     for child,predicate, parent in graph.triples((None, PHYSH.contains, None)):
         child_id = str(child)
         parent_id = str(parent)
-        nx_graph.add_edge(child_id,parent_id)
+        nx_graph.add_edge(parent_id,child_id, rel_type="PHYSH Facet parent")
 
     # Add node labels from SKOS
     for child,predicate, parent in graph.triples((None, SKOS.prefLabel, None)):
