@@ -63,7 +63,11 @@ def concept_hierarchy_graph(graph=None):
     """
     Loads PhySH rdf from github and returns a NetworkX graph with concept ID hierarchy using both SKOS and custom PHYSH.
 
+    Args: 
+        graph (rdf) : rdf graph file to be parsed
 
+    Returns: 
+        nx_graph (nx.DiGraph()) : parsed NetworkX graph consisting of node labels and edges
     """
 
     if graph is None:
@@ -78,56 +82,45 @@ def concept_hierarchy_graph(graph=None):
         if isinstance(subject,URIRef):
              nx_graph.add_node(str(subject))
 
+        
+    for child,predicate, parent in graph:
+        child_id = str(child)
+        parent_id = str(parent)
         # SKOS directional/hierarchical edges: Parent -> Child
-    for child,predicate, parent in graph.triples((None, SKOS.broader, None)):
-        child_id = str(child)
-        parent_id = str(parent)
-        nx_graph.add_edge(parent_id, child_id,rel_type="SKOS concept child")
+        if predicate == SKOS.broader:
+            nx_graph.add_edge(parent_id, child_id,rel_type="SKOS concept parent")
+        
+        # SKOS directional/hierarchical edges: Child -> Parent
+        if predicate == SKOS.narrower:
+            nx_graph.add_edge(child_id, parent_id, rel_type="SKOS concept parent")
 
-    # SKOS directional/hierarchical edges: Child -> Parent
-    for child,predicate, parent in graph.triples((None, SKOS.narrower, None)):
-        child_id = str(child)
-        parent_id = str(parent)
-        nx_graph.add_edge(child_id, parent_id,rel_type="SKOS concept parent") 
+        # PhySH Facet structural edges: Parent (Facet) -> Child (Concept)
+        if predicate == PHYSH.inFacet:
+            nx_graph.add_edge(parent_id, child_id, rel_type="PHYSH Facet parent")
 
-    # PhySH Facet structural edges: Parent (Facet) -> Child (Concept)
-    for child,predicate, parent in graph.triples((None, PHYSH.inFacet, None)):
-        child_id = str(child)
-        parent_id = str(parent)
-        nx_graph.add_edge(parent_id, child_id, rel_type="PHYSH Facet parent")
+        # PhySH Discipline structural edges: Parent (Discipline) -> Child (Concept)
+        if predicate == PHYSH.inDiscipline:
+            nx_graph.add_edge(parent_id, child_id, rel_type="PHYSH Discipline parent")
 
-    # PhySH Discipline structural edges: Parent (Discipline) -> Child (Concept)
-    for child,predicate, parent in graph.triples((None, PHYSH.inDiscipline, None)):
-        child_id = str(child)
-        parent_id = str(parent)
-        nx_graph.add_edge(parent_id, child_id, rel_type="PHYSH Discipline parent")
-
-    # Concept (Parent) -> Container (Child)
-    for child,predicate, parent in graph.triples((None, PHYSH.hasConcept, None)):
-        child_id = str(child)
-        parent_id = str(parent)
-        nx_graph.add_edge(parent_id,child_id, rel_type="PHYSH Discipline parent")
-
-    for child,predicate, parent in graph.triples((None, PHYSH.contains, None)):
-        child_id = str(child)
-        parent_id = str(parent)
-        nx_graph.add_edge(parent_id,child_id, rel_type="PHYSH Facet parent")
-
-    # Add node labels from SKOS
-    for child,predicate, parent in graph.triples((None, SKOS.prefLabel, None)):
-        if str(child) in nx_graph:
-            nx_graph.nodes[str(child)]['label'] = str(parent)
-
-    # Add node labels from dcterms for Disciplines
-    for child,predicate, parent in graph.triples((None, DCTERMS.title, None)):
-            if str(child) in nx_graph:
-                nx_graph.nodes[str(child)]['label'] = str(parent)
-
-    # Add deprecation status
-    for child,predicate,parent in graph.triples((None, PHYSH.deprecated, None)):
-        if str(child) in nx_graph:
-            nx_graph.nodes[str(child)]['deprecated'] = (str(parent).lower() == 'true')
+        # Concept (Parent) -> Container (Child)
+        if predicate == PHYSH.hasConcept:
+            nx_graph.add_edge(parent_id,child_id, rel_type="PHYSH Discipline parent")
     
+        if predicate == PHYSH.contains:
+            nx_graph.add_edge(parent_id,child_id, rel_type="PHYSH Facet parent")
+
+        # Add node labels 
+        #from SKOS
+        if predicate==SKOS.prefLabel and str(child) in nx_graph:
+            nx_graph.nodes[str(child)]['label'] = str(parent)
+        #from DCTERMS for Disciplines
+        if predicate==DCTERMS.title and str(child) in nx_graph:
+            nx_graph.nodes[str(child)]['label'] = str(parent)
+        # Add deprecation status
+        if predicate==PHYSH.deprecated and str(child) in nx_graph:
+            nx_graph.nodes[str(child)]['deprecated'] = (str(parent).lower() == 'true')
+        
+
     return nx_graph
 
 def clean_abstract(df_raw):
