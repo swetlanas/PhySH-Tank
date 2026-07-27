@@ -13,6 +13,8 @@ from rdflib import Graph, Namespace,SKOS, RDF, URIRef
 import gzip,io
 import logging
 from functools import lru_cache
+from bs4 import BeautifulSoup
+
 
 ROOT = Path.cwd()
 while not (ROOT / ".git").exists():
@@ -123,33 +125,27 @@ def concept_hierarchy_graph(graph=None):
         
     return nx_graph
 
-def clean_abstract(df_raw):
+def clean_abstract(raw_abstract_text):
     """
-    Cleans up the abstract text for training.
+    Cleans up the abstract text containing Math XML / HTML for training.
 
     Args:
-    df_raw (dataframe) : input dataframe containing abstracts and phySH tags
+    raw_abstract_text (str) : input abstract text containing HTML and Math XML
 
     Returns:
-    df_cleaned (dataframe) : Cleaned-up dataframe
+    abstract_cleaned (str) : Cleaned-up abstract text
 
     """
 
-    #Removes the first column which encodes index information
-    df_raw.drop(columns=df_raw.columns[0], inplace=True)
+    soup = BeautifulSoup(raw_abstract_text, "lxml")
+    abstract_cleaned = soup.get_text(separator="").strip()
 
-    #If phySH tags are empty, replace it with empty list
-    df_raw['PhysHeadings'] = df_raw["PhysHeadings"].fillna("[]").apply(lambda x: eval(x))
-
-    #Remove duplicate abstracts
-    df_cleaned = df_raw.drop_duplicates(subset=['Abstracts'],keep="first")
-
-    return df_cleaned
+    return abstract_cleaned
 
 
 
 if __name__=='__main__':
-    concept_id_map = concept_id_to_physh_name()
-    
-    #df = pd.read_csv(DATA,sep=',', engine='python')
+
+    graph_hierarchy = concept_hierarchy_graph()
+
 
