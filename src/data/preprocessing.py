@@ -142,6 +142,13 @@ def clean_abstract(raw_abstract_text):
 
     return abstract_cleaned
 
+def prep_data(df):
+
+    #If phySH tags are empty, replace it with empty list
+    df_cleaned = df[~df['physh'].apply( lambda x : not x)]
+
+    return df_cleaned
+
 
 
 if __name__=='__main__':
