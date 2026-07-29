@@ -26,6 +26,7 @@ URL = "https://raw.githubusercontent.com/physh-org/PhySH/master/physh.rdf.gz"
 SKOS = Namespace("http://www.w3.org/2004/02/skos/core#")
 PHYSH = Namespace("https://physh.org/rdf/2018/01/01/core#")
 DCTERMS = Namespace("http://purl.org/dc/terms/")
+PHYSH_URL_PREFIX = "https://doi.org/10.29172/"
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",handlers=[
