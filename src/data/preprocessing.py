@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup
 ROOT = Path.cwd()
 while not (ROOT / ".git").exists():
     ROOT = ROOT.parent
-DATA = ROOT / "data" / "prb_headings_full.csv"
+DATA = ROOT / "data" / "prb_articles_labeled_Jan2016-Jun2026_duplicate-free.json"
 
 
 URL = "https://raw.githubusercontent.com/physh-org/PhySH/master/physh.rdf.gz"
@@ -144,7 +144,21 @@ def clean_abstract(raw_abstract_text):
 
 def prep_data(df):
 
-    #If phySH tags are empty, replace it with empty list
+    #Makes NetworkX graph for physh tags
+    graph_hierarchy = concept_hierarchy_graph()
+    label_naming = nx.get_node_attributes(graph_hierarchy,'label')
+
+    #Applying it to the concept IDs in the dataset and mapping it to PhySH tag names.
+    df["physh_names"]=df["physh"].apply(
+        lambda uuid_list: [
+            label_naming.get(PHYSH_URL_PREFIX+uuid,None) for uuid in uuid_list
+        ]
+    )
+
+    #Parsing XML/HTML and cleaning up the abstract text
+    df['abstract']=df['abstract'].apply( lambda x : clean_abstract(x))
+
+    #If phySH tags are empty, drop that entry
     df_cleaned = df[~df['physh'].apply( lambda x : not x)]
 
     return df_cleaned
@@ -152,7 +166,7 @@ def prep_data(df):
 
 
 if __name__=='__main__':
-
-    graph_hierarchy = concept_hierarchy_graph()
+    df = prep_data(pd.read_json(DATA))
+    
 
 
