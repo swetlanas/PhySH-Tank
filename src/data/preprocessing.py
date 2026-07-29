@@ -156,6 +156,9 @@ def prep_data(df):
     )
 
     #Parsing XML/HTML and cleaning up the abstract text
+    df['title']=df['title'].apply( lambda x : clean_abstract(x))
+
+    #Parsing XML/HTML and cleaning up the abstract text
     df['abstract']=df['abstract'].apply( lambda x : clean_abstract(x))
 
     #If phySH tags are empty, drop that entry
