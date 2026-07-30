@@ -481,6 +481,21 @@ wheels = [
 ]
 
 [[package]]
+name = "gdown"
+version = "6.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "filelock" },
+    { name = "requests", extra = ["socks"] },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6a/b5/a45f62f20664031bf74a6aeb6f8d8cd5910e411bf90d756bd6b09bdc6c35/gdown-6.1.0.tar.gz", hash = "sha256:361c6e04c6ca335df50b9d71f40bcfe9ab70fb26a1b0e890a427267781389553", size = 269670, upload-time = "2026-05-30T11:56:21.322Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7d/56/a99f0f159cce5b26d267317d436afee184f45fc7911938757d7cbbd2d10c/gdown-6.1.0-py3-none-any.whl", hash = "sha256:38a36a94275b8272f684db469bbd73b4d1f64cbbc1751bcb993a1b2be8f013c8", size = 19216, upload-time = "2026-05-30T11:56:20.016Z" },
+]
+
+[[package]]
 name = "gensim"
 version = "4.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1049,6 +1064,34 @@ wheels = [
 ]
 
 [[package]]
+name = "napkinxc"
+version = "0.7.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "gdown" },
+    { name = "numpy" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/80/94/56713fd042644b6605d3c3fc68e175c6cfd831c122a7c1e443b5d56165cf/napkinxc-0.7.2.tar.gz", hash = "sha256:6809556987b042f3b9a96e04c543b5b8d8db53f21c01d0fa6d4b8dfafced760b", size = 2400351, upload-time = "2025-11-10T12:36:04.212Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bb/9a/e7c9ab6a53f47744b03ad1055a8affc3bf1013ef96ee4820287e9f301a1e/napkinxc-0.7.2-cp312-cp312-macosx_12_0_x86_64.whl", hash = "sha256:c1d464d2e01e6e465a438710fbe873bed4dd4d39cb5cf5c6545c1d419ea88957", size = 373577, upload-time = "2025-11-10T12:35:45.657Z" },
+    { url = "https://files.pythonhosted.org/packages/82/3f/b291b37e4aa6aa9b89d499e86a0a8ae85a04af0584c55c8dfa1ff13d05be/napkinxc-0.7.2-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:6bb0c2c865c519268b0cbe77765178892b985e51fc62f78df55eeeac1ce4d576", size = 334618, upload-time = "2025-11-10T12:35:46.843Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/8b/3909f9b68d59116c85e8af86d750ab896bc12c8849749ebb53e3994e4bba/napkinxc-0.7.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:99e34b3180022b5a23a8e123eb50390c70a66666fb6bb432897b89b4ba125757", size = 523560, upload-time = "2025-11-10T12:35:48.438Z" },
+    { url = "https://files.pythonhosted.org/packages/cf/5f/489b9a3f945bc562b5649dd883ad81e1bafbe2132b6ee44b3772a14c4875/napkinxc-0.7.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:57331c90d7db5cc9d7a5658b54d2dda8af35913cfb832706a7580de084ffa9e3", size = 564682, upload-time = "2025-11-10T12:35:49.614Z" },
+    { url = "https://files.pythonhosted.org/packages/01/a9/d112a23efe352ab41de5768c118ed60e2ddf021d4db405dad16a69df6b42/napkinxc-0.7.2-cp312-cp312-win_amd64.whl", hash = "sha256:190fbedc6da80c359876206bbd3bfae529da1ec53ee925f328c3f2d22186bf1d", size = 348682, upload-time = "2025-11-10T12:06:35.074Z" },
+    { url = "https://files.pythonhosted.org/packages/84/2f/3ef2b14c35025a80064b53d70fac6639552383c223dbc3bac0058b323ccb/napkinxc-0.7.2-cp313-cp313-macosx_12_0_x86_64.whl", hash = "sha256:d4d177f2bf2df8bcec49a43bed106c732e1fc0a787f3690843b7c072a5e46c55", size = 373705, upload-time = "2025-11-10T12:35:51.228Z" },
+    { url = "https://files.pythonhosted.org/packages/c1/0b/f7f2e1a36dff3a80123fbe695bea6bc4626bfbd648ce09d8727c0910b2ae/napkinxc-0.7.2-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:67928293ad906b8de113503a1f182694952c7b3d75fc6f30474d946bdfdeba0c", size = 334649, upload-time = "2025-11-10T12:35:52.674Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/22/12a8206450927f2496f5d2de1388b06e0560044956f754276d1e3c1b4f75/napkinxc-0.7.2-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:6f3feb50f7b16d1cabacdb02ef657dceb43887d4449c7e059af6cbfd0ea07b55", size = 523740, upload-time = "2025-11-10T12:35:53.816Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/58/7a033b703900adc60b091a6fcc9fbbb899a81eafb6673211e2180dc4e638/napkinxc-0.7.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:454ca55ebffa7d80d251d0c2d4e1439a936cdd4615f9ff3b4516348ed5fa7008", size = 564395, upload-time = "2025-11-10T12:35:55.013Z" },
+    { url = "https://files.pythonhosted.org/packages/6f/64/d2a68765b26bed10e6b3c2a127d1b61a0eeb6c033052a9c142acd6a9ad78/napkinxc-0.7.2-cp313-cp313-win_amd64.whl", hash = "sha256:d33537d485324bdd118f518a76ebcd8ba8a65b00beea711c944a6ce782f94a3a", size = 348666, upload-time = "2025-11-10T12:06:36.553Z" },
+    { url = "https://files.pythonhosted.org/packages/2f/32/15747ca0234837ffb05ccf162a05bafa67a3033c169f451089c424b2ade9/napkinxc-0.7.2-cp314-cp314-macosx_12_0_x86_64.whl", hash = "sha256:af6378fd029b5197804ecd4f94a970a3e64abc76863862ac75e45a4dd2c97599", size = 374093, upload-time = "2025-11-10T12:35:56.595Z" },
+    { url = "https://files.pythonhosted.org/packages/d9/a9/95e7cad9c1965f4f88ed4c9b3ff566afe3a31bee70b2af0bc1adee110cf1/napkinxc-0.7.2-cp314-cp314-macosx_14_0_arm64.whl", hash = "sha256:35c10f928fef6e49b95c458c175b511df28c96d8bd2fd4a811367fbb4968d531", size = 335507, upload-time = "2025-11-10T12:35:58.044Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/f5/fc0487659cad0887fa9b4f193334c19f367af389ce560020ebb084a6c137/napkinxc-0.7.2-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:15c1706bc18da808ec4bafa3f7fef3d26d2b5e26277ae6a62dc676052174908a", size = 524243, upload-time = "2025-11-10T12:35:59.539Z" },
+    { url = "https://files.pythonhosted.org/packages/8d/53/08da469c4e6ca8c2d1574aa17d2aa0ed05749bf404ad35da034fca195836/napkinxc-0.7.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:ff86d3dba6ae04cc708961b0a5698460c54fc8447dde93143f682fc97457367d", size = 564628, upload-time = "2025-11-10T12:36:01.305Z" },
+    { url = "https://files.pythonhosted.org/packages/ce/8f/ef3c4464ea89cbd76dcba2b0363eaff1333b2e3da6e14b230615930c3a24/napkinxc-0.7.2-cp314-cp314-win_amd64.whl", hash = "sha256:79416220dc7e195261bf14a8e54322f1d3d515a3016576b8bfa827401dd1338d", size = 358854, upload-time = "2025-11-10T12:06:37.86Z" },
+]
+
+[[package]]
 name = "narwhals"
 version = "2.22.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1397,6 +1440,7 @@ dependencies = [
     { name = "ipykernel" },
     { name = "lxml" },
     { name = "matplotlib" },
+    { name = "napkinxc" },
     { name = "networkx" },
     { name = "nltk" },
     { name = "numpy" },
@@ -1418,6 +1462,7 @@ requires-dist = [
     { name = "ipykernel", specifier = ">=7.3.0" },
     { name = "lxml", specifier = ">=6.1.1" },
     { name = "matplotlib", specifier = ">=3.11.0" },
+    { name = "napkinxc", specifier = ">=0.7.2" },
     { name = "networkx", specifier = ">=3.6.1" },
     { name = "nltk", specifier = ">=3.9.4" },
     { name = "numpy", specifier = ">=2.5.0" },
@@ -1831,6 +1876,11 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ac/c3/e2a2b89f2d3e2179abd6d00ebd70bff6273f37fb3e0cc209f48b39d00cbf/requests-2.34.2.tar.gz", hash = "sha256:f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed", size = 142856, upload-time = "2026-05-14T19:25:27.735Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl", hash = "sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0", size = 73075, upload-time = "2026-05-14T19:25:26.443Z" },
+]
+
+[package.optional-dependencies]
+socks = [
+    { name = "pysocks" },
 ]
 
 [[package]]
