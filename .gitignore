@@ -2,6 +2,7 @@
 data/*
 !data/*_sample.json
 literature/*
+notebooks/physh_plt_model*
 
 
 # Byte-compiled / optimized / DLL files
