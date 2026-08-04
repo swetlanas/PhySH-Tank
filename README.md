@@ -19,6 +19,7 @@ PhySH-Tank/
 │   ├── data/          # data collection and preprocessing
 │   └── models/        # ML models
 ├── notebooks/         # EDA and experiments  
+├── data/              # Sample json files
 └── app/               # Streamlit demo 
 ```
 
@@ -28,14 +29,49 @@ PhySH-Tank/
     conda activate physhtank
 
 ## Roadmap
-- [x] v1 — Web scraper (BeautifulSoup + Selenium)
-- [ ] v2 — PhySH REST API client + concept graph
-- [ ] v3 — Baseline models (TF-IDF, Word2Vec)
-- [ ] v4 — Two-tower retrieval model (PyTorch)
-- [ ] v5 — SciBERT fine-tuning (HuggingFace)
-- [ ] v6 — Streamlit demo app
+### v1 — Data pipeline
+- [x] BeautifulSoup + Selenium scraper (Original frontend scraping)
+- [x] `harvest_scraper.py` — APS Harvest API, monthly pagination, retry logic, checkpointing
+- [x] PhySH RDF graph built with NetworkX (SKOS/DCTERMS/PHYSH namespaces)
+- [x] `preprocessing.py` — MathML cleaning (BeautifulSoup/lxml), UUID → tag name mapping
+- [x] Baseline model: TF-IDF + MultinomialNB (`MultiOutputClassifier`, `MultiLabelBinarizer`)
+- [x] Tag pruning evaluated using recall, F1, precision@k metrics
+
+### v2 — Extreme multi-label classification (XMLC): Three comparable approaches
+The goal is a **head-to-head comparison** of three ways to solve the
+XMLC problem, all evaluated on the same train/test split with the same
+metrics (precision@5, Hit@5, MRR, NDCG).
+ 
+#### 2a. napkinXC (PLT) on frozen PhysBERT embeddings
+- [x] Baseline napkinXC on TF-IDF
+- [ ] napkinXC with PhysBERT embeddings
+- [ ] Seed PLT tree structure with existing PhySH NetworkX graph
+
+#### 2b. LoRA-fine-tuned PhysBERT classifier (end-to-end)
+- [ ] `AutoModelForSequenceClassification` on PhysBERT, `num_labels=3000+`, `problem_type="multi_label_classification"`
+- [ ] Configure LoRA (`r`, `lora_alpha`, `lora_dropout`)
+
+#### 2c. Two-tower model 
+- [ ] Paper tower (TBD pretrained model) + tag tower (PhysBERT)
+- [ ] Contrastive loss training
+- [ ] FAISS nearest-neighbor retrieval over tag embeddings
+- [ ] Compare frozen-PhysBERT-tower vs. fine-tuned-tower as an ablation
+
+### v2.5 — Journal recommendation head (maybe)
+- [ ] Multi-task extension, scoped to PRB (single-journal training data)
+
+### v3 — RecSys evaluation metrics
+- [ ] NDCG, MRR, Hit@K computed incrementally
+
+### v4 — Deployment (demo)
+- [ ] Streamlit app: title + abstract → tags + journal
+- [ ] Deploy to Streamlit Community Cloud / HuggingFace Spaces
+
+### v7 — Engineering polish (maybe)
+- [ ] FastAPI + Docker
+
+
 
 ## Future Work
-- Add article title information to training set.
 - Extend to journal recommendation (PRA, PRB, PRC, PRD, PRE, PRL)
   which requires training data from additional APS journals.
