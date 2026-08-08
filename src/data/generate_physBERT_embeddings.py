@@ -36,6 +36,9 @@ logger = logging.getLogger(__name__)
 
 
 def assemble_chunks(chunks_dir):
+    """
+    Consolidates individual chunks of embeddings to make a single embedding matrix.
+    """
 
     chunk_files = sorted(chunks_dir.glob("chunk_*.npy"))
     logger.info(f"Found {len(chunk_files)} chunk files. Combining...")
@@ -47,7 +50,11 @@ def assemble_chunks(chunks_dir):
     np.save(str(DATA_PATH / "physbert_embeddings.npy"), X_transformed_physbert)
     logger.info(f"Saved final embeddings. Shape: {X_transformed_physbert.shape}" )
 
+
 def generate_embeddings():
+    """
+    Generates batches of embeddings for a given title+abstract in chunks and finally, combines to output a single matrix of size (n_samples, 768)
+    """
 
     #Load cleaned up dataset
     df = pd.read_json(CLEANED_DATA)
@@ -105,6 +112,7 @@ def generate_embeddings():
                 temp_batch_embeddings = []
 
     assemble_chunks(chunks_dir)
+
 
 if __name__ == "__main__":
     generate_embeddings()
