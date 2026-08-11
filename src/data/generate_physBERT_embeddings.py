@@ -24,6 +24,7 @@ DATA_SAMPLE = DATA_PATH / "prb_articles_labeled_Jan2016-Jun2026_duplicate-free_s
 
 #CLEANED_DATA is output of prep_data() from preprocessing.py
 CLEANED_DATA  = DATA_PATH / "cleaned_data.json"
+CLEANED_DATA_SAMPLE  = DATA_PATH / "cleaned_data_sample.json"
 
 BATCH_SIZE = 64
 MODEL_NAME = "thellert/physbert_uncased"
@@ -57,7 +58,8 @@ def generate_embeddings():
     """
 
     #Load cleaned up dataset
-    df = pd.read_json(CLEANED_DATA)
+    data_to_load = CLEANED_DATA if CLEANED_DATA.exists() else CLEANED_DATA_SAMPLE
+    df = pd.read_json(data_to_load)
 
 
     # Load PhysBERT tokenizer and model
