@@ -1,4 +1,4 @@
-#src/data/generate_phyBERT_embeddings.py
+#src/data/generate_physBERT_embeddings.py
 
 #For generating abstract+title embeddings using physBERT on RTX 3060 12GB. 
 
