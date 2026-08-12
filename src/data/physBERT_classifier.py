@@ -49,6 +49,33 @@ class PhysBERTClassifierHead(nn.Module):
         return self.fullyconnected(x_embeddings)
 
 
+def evaluate_precision_at_k(model, dataloader, device='cpu', k=5):
+    model.eval()
+    total_precision = 0.0
+    total_samples = 0
+
+    with torch.no_grad():
+        for batch_X, batch_y in dataloader:
+            batch_X, batch_y = batch_X.to(device), batch_y.to(device)
+
+            # Get model logits [batch_size, num_classes] = probability matrix
+            logits = model(batch_X)
+
+            # Get indices of the top-k highest scoring predictions per sample
+            _, topk_indices = torch.topk(logits, k=k, dim=1)
+
+            # Extract true binary values (0 or 1) at those top-k indices
+            topk_targets = torch.gather(batch_y, dim=1, index=topk_indices)
+
+            # Sum true positives per sample and divide by k
+            hits_per_sample = topk_targets.sum(dim=1)
+            precision_per_sample = hits_per_sample / float(k)
+
+            # Average over all samples
+            total_precision += precision_per_sample.sum().item()
+            total_samples += batch_X.size(0)
+
+    return total_precision / total_samples
 
 if __name__=='__main__':
 
