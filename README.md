@@ -44,15 +44,16 @@ metrics (precision@5, Hit@5, MRR, NDCG).
  
 #### 2a. napkinXC (PLT) on frozen PhysBERT embeddings
 - [x] Baseline napkinXC on TF-IDF
-- [ ] napkinXC with PhysBERT embeddings
+- [x] napkinXC with PhysBERT embeddings
 - [ ] Seed PLT tree structure with existing PhySH NetworkX graph
 
 #### 2b. LoRA-fine-tuned PhysBERT classifier (end-to-end)
+- [x] Linear classifier head on top of PhysBERT
 - [ ] `AutoModelForSequenceClassification` on PhysBERT, `num_labels=3000+`, `problem_type="multi_label_classification"`
-- [ ] Configure LoRA (`r`, `lora_alpha`, `lora_dropout`)
+
 
 #### 2c. Two-tower model 
-- [ ] Paper tower (TBD pretrained model) + tag tower (PhysBERT)
+- [ ] Abstract and text tower (TBD pretrained model) + tag tower (PhysBERT)
 - [ ] Contrastive loss training
 - [ ] FAISS nearest-neighbor retrieval over tag embeddings
 - [ ] Compare frozen-PhysBERT-tower vs. fine-tuned-tower as an ablation
@@ -67,7 +68,7 @@ metrics (precision@5, Hit@5, MRR, NDCG).
 - [ ] Streamlit app: title + abstract → tags + journal
 - [ ] Deploy to Streamlit Community Cloud / HuggingFace Spaces
 
-### v7 — Engineering polish (maybe)
+### v5 — Engineering polish (maybe)
 - [ ] FastAPI + Docker
 
 
