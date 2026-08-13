@@ -27,18 +27,23 @@ PhySH-Tank/
 ## Setup
 
 ### Recommended (uv)
+```
 git clone https://github.com/swetlanas/PhySH-Tank  
 cd PhySH-Tank  
 uv sync
+```
 
 ### pip
+```
 pip install -r requirements.txt
+```
 
 ### conda
+```
 conda create -n physh-env python=3.12.3  
 conda activate physh-env  
 pip install -r requirements.txt
-
+```
 
 ## Roadmap
 ### v1 — Data pipeline
