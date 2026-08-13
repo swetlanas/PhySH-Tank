@@ -9,18 +9,25 @@ and ineffecient process. Authors are expected to select 3-8 good tags which migh
 
 
 ## Dataset
-Model trained on 40,000+ Physical Review B abstracts (volumes 93–110) starting January 2016, when APS switched to using PhySH from PACS, through December 2024. Abstracts collected prior to Cloudflare protection which prevents automated scraping. The dataset is not redistributed in this repository.
+Model trained on 40,000+ Physical Review B abstracts (volumes 93–110) starting January 2016, when APS switched to using PhySH from PACS, through December 2024. Abstracts collected prior to Cloudflare protection which prevents automated scraping. The dataset is not redistributed in this repository. See [`DATACARD.md`](https://github.com/swetlanas/PhySH-Tank/blob/main/docs/DATACARD.md) for full dataset documentation and [`PhySH Taxonomy.md`](https://github.com/swetlanas/PhySH-Tank/blob/main/docs/PhySH%20Taxonomy.md) for a detailed breakdown of the PhySH RDF structure and how it's used in this project.
 
 ## Project Structure
 
 ```
 PhySH-Tank/
-├── src/
-│   ├── data/          # data collection and preprocessing
-│   └── models/        # ML models
-├── notebooks/         # EDA and experiments  
-├── data/              # Sample json files
-└── app/               # Streamlit demo 
+├── data                  # Sample json files
+│   ├── models            # Saved models
+├── docs                  # Documentation
+├── literature            # Relevant papers
+├── logs                  # Saved logs
+├── notebooks             # EDA and experiments
+├── src
+│   ├── __init__.py
+│   ├── data              # Data collection and preprocessing
+│   │   ├── deprecated    # Old scraping scripts
+│   └── utils             # Helper functions
+│   └── models            # ML models
+└── app                   # Streamlit demo 
 ```
 
 
