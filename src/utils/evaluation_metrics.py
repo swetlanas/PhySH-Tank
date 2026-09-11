@@ -1,4 +1,4 @@
-#src/data/precision_at_k.py
+#src/data/evaluation_metrics.py
 
 #Calculates the precision score of top k hits for a given model output
 
