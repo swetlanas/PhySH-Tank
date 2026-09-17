@@ -30,7 +30,7 @@ CLEANED_DATA_SAMPLE  = DATA_PATH / "cleaned_data_sample.json"
 BATCH_SIZE = 16
 MODEL_NAME = "thellert/physbert_uncased"
 
-EPOCHS=10
+EPOCHS=20
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",handlers=[
         logging.FileHandler(ROOT / "logs" / "physbert_finetuning.log"),
@@ -145,7 +145,7 @@ if __name__=='__main__':
         gradient_checkpointing=True,
         bf16=True,
         tf32=True,
-        learning_rate=2e-4,
+        learning_rate=3e-4,
         weight_decay=0.01,
         warmup_ratio=0.1,
         lr_scheduler_type="linear",
