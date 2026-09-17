@@ -13,7 +13,7 @@ import torch
 
 #From HuggingFace
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, DataCollatorWithPadding
-from transformers import Trainer,TrainingArguments
+from transformers import Trainer,TrainingArguments, EarlyStoppingCallback
 from peft import get_peft_model, LoraConfig, TaskType, PeftModel
 from datasets import Dataset
 
@@ -39,18 +39,27 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-def compute_metrics(eval_pred):
+def compute_metrics(eval_pred,k = 5):
 
     logits, labels = eval_pred
     logits = torch.tensor(logits)
     labels = torch.tensor(labels)
+    total_true_tags_per_paper = labels.sum(dim=1).clamp(min=1) #in case it encounters papers with 0 tags (which it shouldn't, since it was dropped in preprocessing)
 
-    k = 5
     _, topk_indices = torch.topk(logits, k=k, dim=1)
     topk_targets = torch.gather(labels, dim=1, index=topk_indices)
     precision_per_sample = topk_targets.sum(dim=1) / float(k)
+    recall_per_sample = topk_targets.sum(dim=1) / total_true_tags_per_paper
+    position_discount = torch.log2(torch.tensor(range(2,k+2)))
+    dcg_per_sample = (topk_targets / position_discount).sum(dim=1)
+    ideal_dcg_per_sample =  (torch.tensor([[1 if idx < tags else 0 for idx in range(k)] for tags in total_true_tags_per_paper]) / position_discount).sum(dim=1)
+    ndcg_per_sample = dcg_per_sample / ideal_dcg_per_sample
+    hits_per_sample = (topk_targets.sum(dim=1) >= 1).float()
 
-    return {"precision_at_5": precision_per_sample.mean().item()}
+    return {"precision_at_5": precision_per_sample.mean().item(),
+            "recall_at_5": recall_per_sample.mean().item(), 
+            "ndcg_at_5": ndcg_per_sample.mean().item(),
+            "hit_at_5": hits_per_sample.mean().item()}
 
 
 def tokenize_batch(batch):
@@ -143,7 +152,9 @@ if __name__=='__main__':
         logging_steps=10,
         eval_strategy="epoch",
         save_strategy="epoch",
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=2)],
         metric_for_best_model="precision_at_5",
+        greater_is_better=True,   # tells the trainer precision@5 needs to be maximized
         load_best_model_at_end=True,
     )
 
