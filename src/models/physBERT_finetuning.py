@@ -152,7 +152,6 @@ if __name__=='__main__':
         logging_steps=10,
         eval_strategy="epoch",
         save_strategy="epoch",
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=2)],
         metric_for_best_model="precision_at_5",
         greater_is_better=True,   # tells the trainer precision@5 needs to be maximized
         load_best_model_at_end=True,
@@ -166,6 +165,7 @@ if __name__=='__main__':
         eval_dataset=tokenized_test,
         compute_metrics=compute_metrics,
         data_collator=collator,
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=2)],
     )
 
     trainer.train()
