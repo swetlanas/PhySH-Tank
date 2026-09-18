@@ -61,35 +61,25 @@ pip install -r requirements.txt
 - [x] Baseline model: TF-IDF + MultinomialNB (`MultiOutputClassifier`, `MultiLabelBinarizer`)
 - [x] Tag pruning evaluated using recall, F1, precision@k metrics
 
-### v2 — Extreme multi-label classification (XMLC): Three comparable approaches
-The goal is a **head-to-head comparison** of three ways to solve the
-XMLC problem, all evaluated on the same train/test split with the same
-metrics (precision@5, Hit@5, MRR, NDCG).
+### v2 — Extreme multi-label classification (XMLC)
+The goal is a head-to-head comparison of two distinct ways to solve the
+XMLC problem, all evaluated on the same train/test split with the same recsys
+metrics (Precision@5, Hit@5, recall@5, NDCG).
  
-#### 2a. napkinXC (PLT) on frozen PhysBERT embeddings
+#### 2a. napkinXC (PLT) on frozen PhysBERT embeddings - Tree Based ML
 - [x] Baseline napkinXC on TF-IDF
 - [x] napkinXC with PhysBERT embeddings
-- [ ] Seed PLT tree structure with existing PhySH NetworkX graph
 
-#### 2b. LoRA-fine-tuned PhysBERT classifier (end-to-end)
+#### 2b. LoRA-fine-tuned PhysBERT classifier (end-to-end) - LLM Based
 - [x] Linear classifier head on top of PhysBERT
-- [ ] `AutoModelForSequenceClassification` on PhysBERT, `num_labels=3000+`, `problem_type="multi_label_classification"`
+- [x] LoRA finetuning for `AutoModelForSequenceClassification` on PhysBERT, `num_labels=3000+`, `problem_type="multi_label_classification"`
 
-
-#### 2c. Two-tower model 
-- [ ] Abstract and text tower (TBD pretrained model) + tag tower (PhysBERT)
-- [ ] Contrastive loss training
-- [ ] FAISS nearest-neighbor retrieval over tag embeddings
-- [ ] Compare frozen-PhysBERT-tower vs. fine-tuned-tower as an ablation
-
-### v2.5 — Journal recommendation head (maybe)
-- [ ] Multi-task extension, scoped to PRB (single-journal training data)
 
 ### v3 — RecSys evaluation metrics
-- [ ] NDCG, MRR, Hit@K computed incrementally
+- [x] NDCG, Recall@k, Hit@K computed incrementally
 
 ### v4 — Deployment (demo)
-- [ ] Streamlit app: title + abstract → tags + journal
+- [ ] Streamlit app: title + abstract → Choice of 5 ranked tags 
 - [ ] Deploy to Streamlit Community Cloud / HuggingFace Spaces
 
 ### v5 — Engineering polish (maybe)
@@ -98,5 +88,11 @@ metrics (precision@5, Hit@5, MRR, NDCG).
 
 
 ## Future Work
+- Seed PLT tree structure with existing PhySH NetworkX graph
 - Extend to journal recommendation (PRA, PRB, PRC, PRD, PRE, PRL)
   which requires training data from additional APS journals.
+- Two-tower model 
+  - [ ] Abstract and text tower (TBD pretrained model) + tag tower (PhysBERT)
+  - [ ] Contrastive loss training
+  - [ ] FAISS nearest-neighbor retrieval over tag embeddings
+  - [ ] Compare frozen-PhysBERT-tower vs. fine-tuned-tower as an ablation
