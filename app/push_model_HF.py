@@ -13,20 +13,22 @@ while not (ROOT / ".git").exists():
 
 DATA_PATH = ROOT / "data"
 #PhysBERT 
-MODEL_NAME ="thellert/physbert_uncased"
+BASE_MODEL ="thellert/physbert_uncased"
+NEW_MODEL = "swetlanas/physbert-tag-recommender"
 
 # Reload the binarizer
 mlb = joblib.load(DATA_PATH / "mlb_binarizer.pkl")
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 base_model = AutoModelForSequenceClassification.from_pretrained(
-    MODEL_NAME, num_labels=len(mlb.classes_), problem_type="multi_label_classification"
+    BASE_MODEL, num_labels=len(mlb.classes_), problem_type="multi_label_classification"
 )
 #Add the index <-> label dictionary to avoid pushing mlb_binarizer.pkl to HF
 base_model.config.id2label = {i: label for i, label in enumerate(mlb.classes_)}
 base_model.config.label2id = {label: i for i, label in enumerate(mlb.classes_)}
+base_model.config.push_to_hub(NEW_MODEL)
 
 best_model = PeftModel.from_pretrained(base_model, DATA_PATH / "models" / "physbert_lora_finetuned" / "checkpoint-20160")
 
-tokenizer.push_to_hub("swetlanas/physbert-tag-recommender")
-best_model.push_to_hub("swetlanas/physbert-tag-recommender")
+tokenizer.push_to_hub(NEW_MODEL)
+best_model.push_to_hub(NEW_MODEL)
