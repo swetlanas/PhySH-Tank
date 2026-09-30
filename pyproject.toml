@@ -21,6 +21,7 @@ dependencies = [
     "pandas>=3.0.3",
     "peft>=0.20.0",
     "plotly>=6.8.0",
+    "pylatexenc>=2.11",
     "python-dotenv>=1.2.3",
     "rdflib>=7.6.0",
     "requests>=2.34.2",
