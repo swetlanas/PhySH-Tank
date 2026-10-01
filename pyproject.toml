@@ -35,3 +35,17 @@ dependencies = [
     "xgboost>=3.4.0",
 ]
 
+[project.optional-dependencies]
+backend = [
+    "fastapi>=0.141.1",
+    "uvicorn>=0.53.0",
+    "pydantic>=2.13.5",
+    "torch>=2.12.1",
+    "transformers>=5.12.1",
+    "peft>=0.20.0",
+    "pylatexenc>=2.11",
+]
+frontend = [
+    "requests>=2.34.2",
+    "streamlit>=1.64.0",
+]
