@@ -1,3 +1,8 @@
+#app/front_end.py
+
+#Streamlit front end for getting titles and abstracts.
+
+
 import streamlit as st
 import requests
 
@@ -7,7 +12,7 @@ API_URL = "http://localhost:8000/predict"
 def main():
     st.title("APS Physical Review B PhySH Tag Recommender")
     st.write("Enter the title and abstract of your preprint and get a list of 5 ordered [PhySH](https://physh.org/) tags. Use the slider to get up to 15 tags, though the model is optimized for top 5 tags.")
-    # Gets the recipe information from the user
+
     title_text = st.text_input('Paper title')
     abstract_text = st.text_area('Paper abstract')
 
