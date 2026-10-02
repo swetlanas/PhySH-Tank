@@ -7,6 +7,8 @@ import streamlit as st
 import requests
 import os
 
+st.set_page_config(layout="wide")
+
 
 # Uses environment variable if present (inside Docker), otherwise defaults to localhost
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
