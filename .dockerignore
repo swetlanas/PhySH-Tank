@@ -1,0 +1,16 @@
+# Exclude heavy datasets and local model weights
+data/*.json
+data/*.csv
+data/*.npy
+data/*.rdf
+data/models/
+
+# Exclude unneeded directories
+literature/
+notebooks/
+docs/
+logs/
+.git/
+.venv/
+**/__pycache__/
+app_backend/push_model_HF.py
