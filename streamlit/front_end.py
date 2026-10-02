@@ -1,4 +1,4 @@
-#app/front_end.py
+#streamlit/front_end.py
 
 #Streamlit front end for getting titles and abstracts.
 
