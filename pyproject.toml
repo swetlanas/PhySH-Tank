@@ -45,3 +45,12 @@ dev = [
     "tqdm>=4.68.3",
     "xgboost>=3.4.0",
 ]
+
+# Direct uv to fetch "torch" from PyTorch's CPU repository to avoid large CUDA bundled pytorch
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
