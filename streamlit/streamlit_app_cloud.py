@@ -1,6 +1,10 @@
 import streamlit as st
 from src.utils.predict import clean_text, load_model, predict_tags
+from pathlib import Path
+import sys
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from src.utils.predict import clean_text, load_model, predict_tags
 
 @st.cache_resource(show_spinner="Loading model (first run takes a while)...")
 def get_model():
