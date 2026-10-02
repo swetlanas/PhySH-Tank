@@ -5,9 +5,12 @@
 
 import streamlit as st
 import requests
+import os
 
 
-API_URL = "http://localhost:8000/predict"
+# Uses environment variable if present (inside Docker), otherwise defaults to localhost
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
+API_URL = f"{BACKEND_URL}/predict"
 
 def main():
     st.title("APS Physical Review B PhySH Tag Recommender")
