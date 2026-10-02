@@ -1,5 +1,4 @@
 import streamlit as st
-from src.utils.predict import clean_text, load_model, predict_tags
 from pathlib import Path
 import sys
 
