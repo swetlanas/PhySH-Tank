@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./app_backend/Dockerfile.backend
+    container_name: physh_backend
+    ports:
+      - "8000:8000"
+    # Mount local HuggingFace cache for persistent model weights across restarts
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./streamlit/Dockerfile.frontend
+    container_name: physh_frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+
+volumes:
+  hf_cache:
