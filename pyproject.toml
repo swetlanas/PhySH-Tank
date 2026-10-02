@@ -6,6 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
 
+# uv sync --all-extras      → full local dev environment (backend + frontend + dev)
+# uv sync --extra backend       → lean backend-only install (for Docker/FastAPI image)
+# uv sync --extra frontend      → lean frontend-only install (for Docker/Streamlit image)
 [project.optional-dependencies]
 backend = [
     "fastapi>=0.141.1",
