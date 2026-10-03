@@ -9,6 +9,7 @@ from src.utils.predict import clean_text, load_model, predict_tags
 def get_model():
     return load_model()
 
+st.set_page_config(layout="wide")
 
 tokenizer, model, id2label = get_model()
 
