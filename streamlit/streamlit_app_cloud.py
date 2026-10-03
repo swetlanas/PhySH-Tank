@@ -17,7 +17,7 @@ abstract = st.text_area("Abstract")
 top_k = st.slider("Number of tags", 5, 15, 5)
 st.caption("The model is optimized for the top 5 tags.")
 
-if st.button("Predict"):
+if st.button("Get tags"):
     cleaned_title = clean_text(title)
     cleaned_abstract = clean_text(abstract)
 
@@ -29,5 +29,5 @@ if st.button("Predict"):
         with st.spinner("Predicting..."):
             tags = predict_tags(cleaned_title, cleaned_abstract, top_k,
                                 tokenizer, model, id2label)
-        for tag in tags:
-            st.write(f"- {tag}")
+        for idx,tag in enumerate(tags,1):
+            st.write(f"{idx}. {tag}")
