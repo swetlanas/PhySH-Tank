@@ -2,6 +2,7 @@ import streamlit as st
 from pathlib import Path
 import sys
 import psutil
+import os
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.utils.predict import clean_text, load_model, predict_tags
@@ -25,6 +26,7 @@ top_k = st.slider("Number of tags", 5, 15, 5)
 st.caption("The model is optimized for the top 5 tags.")
 
 if st.button("Get tags"):
+    logging.info("Memory (MB)", f"{rss_mb():.0f}")
     st.sidebar.metric("Memory (MB)", f"{rss_mb():.0f}")
     cleaned_title = clean_text(title)
     cleaned_abstract = clean_text(abstract)
