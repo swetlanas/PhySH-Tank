@@ -1,7 +1,7 @@
 # PhySH-Tank : Physics Subject Headings Tag Recommendation System
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-name.streamlit.app)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://physh-tag-reco.streamlit.app/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
-[![Docker](https://img.shields.io/badge/docker-compose-ready-blue.svg)](https://www.docker.com/)
+[![Docker](https://img.shields.io/badge/Docker_Compose-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Adapter-yellow)](https://huggingface.co/swetlanas/physbert-tag-recommender)
 
 > An interactive machine learning app that recommends APS Physical Review B topic tags from paper titles and abstracts using fine-tuned PhysBERT and LoRA across 2,421 classes.
