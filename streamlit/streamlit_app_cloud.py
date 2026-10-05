@@ -28,17 +28,17 @@ def rss_mb() -> float:
 
 tokenizer, model, id2label = get_model()
 
-mem_slot = st.sidebar.empty()
-mem_slot.metric("Memory (MB)", f"{rss_mb():.0f}")   # baseline, shown on every run
+#mem_slot = st.sidebar.empty()
+#mem_slot.metric("Memory (MB)", f"{rss_mb():.0f}")   # baseline at startup
 
 
 title = st.text_input("Title")
 abstract = st.text_area("Abstract")
 top_k = st.slider("Number of tags", 5, 15, 5)
-st.caption("The model is optimized for the top 5 tags.")
+st.caption("The model is optimized for the top 5 tags. If major tags/concepts are missing, consider rewriting the abstract to include them.")
 
 if st.button("Get tags"):
-    st.sidebar.metric("Memory (MB)", f"{rss_mb():.0f}")
+    #st.sidebar.metric("Memory (MB)", f"{rss_mb():.0f}")
     cleaned_title = clean_text(title)
     cleaned_abstract = clean_text(abstract)
 
@@ -50,7 +50,7 @@ if st.button("Get tags"):
         with st.spinner("Predicting..."):
             tags = predict_tags(cleaned_title, cleaned_abstract, top_k,
                                 tokenizer, model, id2label)
-        mem_slot.metric("Memory (MB)", f"{rss_mb():.0f}")   # after inference
+        #mem_slot.metric("Memory (MB)", f"{rss_mb():.0f}")   # memory usage after inference
         logger.info("Memory after prediction (MB): %.0f", rss_mb())
         for idx,tag in enumerate(tags,1):
             st.write(f"{idx}. {tag}")
