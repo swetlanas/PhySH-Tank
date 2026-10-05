@@ -5,14 +5,14 @@ import psutil
 import os
 import logging
 
+st.set_page_config(layout="wide")
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.utils.predict import clean_text, load_model, predict_tags
 
 @st.cache_resource(show_spinner="Loading model (first run takes a while)...")
 def get_model():
     return load_model()
-
-st.set_page_config(layout="wide")
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",handlers=[
@@ -28,13 +28,16 @@ def rss_mb() -> float:
 
 tokenizer, model, id2label = get_model()
 
+mem_slot = st.sidebar.empty()
+mem_slot.metric("Memory (MB)", f"{rss_mb():.0f}")   # baseline, shown on every run
+
+
 title = st.text_input("Title")
 abstract = st.text_area("Abstract")
 top_k = st.slider("Number of tags", 5, 15, 5)
 st.caption("The model is optimized for the top 5 tags.")
 
 if st.button("Get tags"):
-    logger.info("Memory (MB)", f"{rss_mb():.0f}")
     st.sidebar.metric("Memory (MB)", f"{rss_mb():.0f}")
     cleaned_title = clean_text(title)
     cleaned_abstract = clean_text(abstract)
@@ -47,5 +50,7 @@ if st.button("Get tags"):
         with st.spinner("Predicting..."):
             tags = predict_tags(cleaned_title, cleaned_abstract, top_k,
                                 tokenizer, model, id2label)
+        mem_slot.metric("Memory (MB)", f"{rss_mb():.0f}")   # after inference
+        logger.info("Memory after prediction (MB): %.0f", rss_mb())
         for idx,tag in enumerate(tags,1):
             st.write(f"{idx}. {tag}")
