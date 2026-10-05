@@ -1,9 +1,12 @@
 import re
-
+import logging
 import torch
 from peft import PeftModel
 from pylatexenc.latex2text import LatexNodes2Text
 from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer
+
+
+logger = logging.getLogger(__name__)
 
 BASE_MODEL = "thellert/physbert_uncased"
 MODEL_ID = "swetlanas/physbert-tag-recommender"
