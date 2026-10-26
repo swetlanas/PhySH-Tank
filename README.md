@@ -7,7 +7,7 @@
 [**LIVE DEMO HERE (Streamlit: physh-tag-reco.streamlit.app/)**](https://physh-tag-reco.streamlit.app/)  
 
 
-A machine learning app that recommends APS Physical Review B PhySH tags ([Physics Subject Headings](https://github.com/physh-org/PhySH)) for articles based on their titles and abstracts using [PhysBERT](https://huggingface.co/thellert/physbert_uncased) fine-tuned with LoRA (Low Rank Adaptation) across 2000+ labels. Currently optimized for APS Physical Review B articles covering condensed matter and related fields. Check out the [PhySH classification system and its history](https://www.isko.org/cyclo/physh) for background.
+A machine learning app that recommends APS Physical Review B PhySH tags ([Physics Subject Headings](https://github.com/physh-org/PhySH)) for articles based on their titles and abstracts using [PhysBERT](https://huggingface.co/thellert/physbert_uncased) fine-tuned with LoRA (Low Rank Adaptation) across 3000+ labels. Currently optimized for APS Physical Review B articles covering condensed matter and related fields. Check out the [PhySH classification system and its history](https://www.isko.org/cyclo/physh) for background.
 
 
 ## Motivation
@@ -15,7 +15,7 @@ When submitting papers to APS journals, authors must manually filter through the
 
 
 ## Dataset
-Model trained on 40,000+ Physical Review B abstracts (volumes 93–113) starting January 2016, when APS switched to using PhySH from PACS, through June 2026. Data collected using [APS Harvest API](https://harvest.aps.org/docs/harvest-api). The dataset is not redistributed in this repository but can be reproduced with the [harvestAPI_pull.py](https://github.com/swetlanas/PhySH-Tank/blob/main/src/data/harvestAPI_pull.py) script  which handles pagination, retries, and checkpointing.. See [`DATACARD.md`](https://github.com/swetlanas/PhySH-Tank/blob/main/docs/DATACARD.md) for full dataset documentation and [`PhySH Taxonomy.md`](https://github.com/swetlanas/PhySH-Tank/blob/main/docs/PhySH%20Taxonomy.md) for a detailed breakdown of the PhySH RDF structure and how it's used in this project.
+Model trained on 50,000+ Physical Review B abstracts (volumes 93–113) starting January 2016, when APS switched to using PhySH from PACS, through June 2026. Data collected using [APS Harvest API](https://harvest.aps.org/docs/harvest-api). The dataset is not redistributed in this repository but can be reproduced with the [harvestAPI_pull.py](https://github.com/swetlanas/PhySH-Tank/blob/main/src/data/harvestAPI_pull.py) script  which handles pagination, retries, and checkpointing.. See [`DATACARD.md`](https://github.com/swetlanas/PhySH-Tank/blob/main/docs/DATACARD.md) for full dataset documentation and [`PhySH Taxonomy.md`](https://github.com/swetlanas/PhySH-Tank/blob/main/docs/PhySH%20Taxonomy.md) for a detailed breakdown of the PhySH RDF structure and how it's used in this project.
 
 ## Project Structure
 
